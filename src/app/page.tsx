@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-import { Card } from '@/components/ui/card';
+} from '@/components/ui/card';
 import { OverviewCard } from '@/components/dashboard/overview-card';
 import { GenAIPanel } from '@/components/dashboard/gen-ai-panel';
 import { FileText, Signal, Users, BrainCircuit } from 'lucide-react';
