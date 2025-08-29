@@ -11,29 +11,35 @@ import { FileText, Signal, Users, BrainCircuit } from 'lucide-react';
 import { PLAYERS } from '@/lib/data';
 import { RecentMatches } from '@/components/dashboard/recent-matches';
 import { ClubStatsTable } from '@/components/dashboard/club-stats-table';
-import { getFixtures, getStandings, getTeams } from '@/lib/api-football';
+import { getFixtures, getStandings, getTeams } from '@/lib/api';
 import type { Team } from '@/types';
 
 export default async function DashboardPage() {
   const today = new Date().toISOString().split('T')[0];
+
+  // Fetch data
   const liveFixtures = await getFixtures({ live: 'all' });
   const allFixtures = await getFixtures({ date: today });
-  const standings = await getStandings({ league: '39', season: '2023' }); // Premier League
+  const standings = await getStandings({ league: '39', season: '2023' });
   const teamsData = await getTeams({ league: '39', season: '2023' });
   const teams: Team[] = teamsData.map((t: any) => t.team);
 
+  // Filter matches
   const upcomingMatches = allFixtures.filter(
     (m) => m.fixture.status.short === 'NS'
   );
   const completedMatches = allFixtures
     .filter((m) => m.fixture.status.short === 'FT')
-    .slice(0, 10); // Limit to last 10 completed matches for the dropdown
+    .slice(0, 10); // Last 10 completed matches
 
   return (
     <div className="flex-1 space-y-4 p-4 sm:p-8">
-      <div className="flex items-center justify-between space-y-2">
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
       </div>
+
+      {/* Overview Section */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <OverviewCard
           title="Live Matches"
@@ -60,7 +66,10 @@ export default async function DashboardPage() {
           description="Match outcome predictions this week"
         />
       </div>
+
+      {/* Standings and AI Panel */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
+        {/* Premier League Standings */}
         <Card className="lg:col-span-4">
           <CardHeader>
             <CardTitle>Premier League Standings</CardTitle>
@@ -72,10 +81,14 @@ export default async function DashboardPage() {
             <ClubStatsTable standings={standings} />
           </CardContent>
         </Card>
+
+        {/* AI Analysis Panel */}
         <div className="lg:col-span-3">
           <GenAIPanel teams={teams} completedMatches={completedMatches} />
         </div>
       </div>
+
+      {/* Recent Matches Section */}
       <div className="grid grid-cols-1 gap-4">
         <RecentMatches
           liveMatches={liveFixtures}
