@@ -4,14 +4,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { OverviewCard } from '@/components/dashboard/overview-card';
 import { GenAIPanel } from '@/components/dashboard/gen-ai-panel';
 import { FileText, Signal, Users, BrainCircuit } from 'lucide-react';
 import { PLAYERS } from '@/lib/data';
 import { RecentMatches } from '@/components/dashboard/recent-matches';
 import { ClubStatsTable } from '@/components/dashboard/club-stats-table';
-import { getFixtures, getStandings, getTeams } from '@/lib/api';
+import { getFixtures, getStandings, getTeams } from '@/lib/api-football';
 import type { Team } from '@/types';
 
 export default async function DashboardPage() {
