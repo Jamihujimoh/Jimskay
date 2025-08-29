@@ -11,7 +11,10 @@ import { FileText, Signal, Users, BrainCircuit } from 'lucide-react';
 import { PLAYERS } from '@/lib/data';
 import { RecentMatches } from '@/components/dashboard/recent-matches';
 import { ClubStatsTable } from '@/components/dashboard/club-stats-table';
-import { getFixtures, getStandings, getTeams } from '@/lib/api';
+import { getFixtures, getStandings } from '@/lib/api-football';
+import { getTeams } from '@/lib/sportradar';
+import { getOdds } from '@/lib/the-odds-api';
+
 import type { Team } from '@/types';
 
 // Define types for fixtures and matches
