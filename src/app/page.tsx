@@ -11,22 +11,57 @@ import { FileText, Signal, Users, BrainCircuit } from 'lucide-react';
 import { PLAYERS } from '@/lib/data';
 import { RecentMatches } from '@/components/dashboard/recent-matches';
 import { ClubStatsTable } from '@/components/dashboard/club-stats-table';
-import { getFixtures, getStandings, getTeams } from '@/lib/api-football';
+import { getFixtures, getStandings, getTeams } from '@/lib/api';
 import type { Team } from '@/types';
+
+// Define types for fixtures and matches
+interface FixtureStatus {
+  short: string;
+  long?: string;
+}
+
+interface Fixture {
+  id: number;
+  status: FixtureStatus;
+  date: string;
+  venue?: string;
+  // add more properties if needed
+}
+
+interface Match {
+  fixture: Fixture;
+  homeTeam: {
+    id: number;
+    name: string;
+    logo?: string;
+  };
+  awayTeam: {
+    id: number;
+    name: string;
+    logo?: string;
+  };
+  score?: {
+    fullTime?: {
+      home: number;
+      away: number;
+    };
+  };
+  // add more properties if needed
+}
 
 export default async function DashboardPage() {
   const today = new Date().toISOString().split('T')[0];
 
   // Fetch data
-  const liveFixtures = await getFixtures({ live: 'all' });
-  const allFixtures = await getFixtures({ date: today });
-  const standings = await getStandings({ league: '39', season: '2023' });
-  const teamsData = await getTeams({ league: '39', season: '2023' });
+  const liveFixtures: Match[] = await getFixtures({ live: 'all' });
+  const allFixtures: Match[] = await getFixtures({ date: today });
+  const standings = await getStandings({ league: '39', season: '2024' });
+  const teamsData = await getTeams({ league: '39', season: '2024' });
   const teams: Team[] = teamsData.map((t: any) => t.team);
 
   // Filter matches
   const upcomingMatches = allFixtures.filter(
-    (m) => m.fixture.status.short === 'NS'
+    (m: Match) => m.fixture.status.short === 'NS'
   );
   const completedMatches = allFixtures
     .filter((m) => m.fixture.status.short === 'FT')
